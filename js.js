@@ -353,6 +353,14 @@ function trOut(obj){
 }
 
 function callMenu(reCode,day){
+	
+	let orders = document.getElementsByName("orders");
+	if(orders != null){ //orders의 내용이 있다면! 지워라 
+		for(index=orders.length-1; index>=0; index--){
+			orders[index].remove(); //orders[index] 는 메뉴
+		}
+	}
+	
 	// Step1
 	let ajax = new XMLHttpRequest();
 	
@@ -418,12 +426,14 @@ function orders(text,day){
 	if(menuCheck[info[5]]==false){ //menuCheck의 5번방은 index번호임(몇번째 메뉴인지). false이면 true로 바꿔줌
 		let menu = document.createElement("div");
 		menu.className = "col";
+		//alert(menuCheck[info[5]]);
 		
-
+		
 		menu.setAttribute("name" , "orders");
-		menu.setAttribute("data-recode",info[0]);
-		menu.setAttribute("data-menucode",info[2]);
-		menu.setAttribute("data-day" , day);	
+		menu.setAttribute("data-recode",info[0]); //recode
+		menu.setAttribute("data-menucode",info[2]); //menucode
+		menu.setAttribute("data-day" , day); //day
+		
 		
 		
 		menu.addEventListener("mouseover", function(event){
@@ -444,11 +454,12 @@ function orders(text,day){
 		menu.appendChild(menuName);
 		menu.appendChild(menuPrice);
 		
-
+		
 		let input = makeInput("number", "quantity", 1);
 		input.min = "1";
 		input.man = "10";
-		menu.setAttribute("data-qty" ,input);
+
+		
 		menu.appendChild(input);
 		
 		orderList.appendChild(menu);
@@ -465,12 +476,34 @@ function objRemove(obj,index){
 
 function callData(){
 	let orders = document.getElementsByName("orders");
-	//let count = document.getElementsByName("quantity");
-	
-	alert(orders.length);
+	let json = []; //json은 배열이야
+	//alert(orders.length);
 	for(index=0; index<orders.length; index++){
-		alert(orders[index].dataset.recode + ":" + orders[index].dataset.menucode + ":" + orders[index].dataset.day + ":" + orders[index].dataset.qty);
+		json.push({reCode: orders[index].dataset.recode,mCode:orders[index].dataset.menucode,rDate:orders[index].dataset.day,quantity:orders[index].childNodes[2].value});	
 	}
+	
+	let jsonData = JSON.stringify(json);
+		
+	let form = document.createElement("form");
+
+	
+	form.setAttribute("method" , "post");
+	form.setAttribute("action" , "Orders");
+	
+	form.appendChild(makeInput("hidden","data",jsonData)); //TYPE, NAME, VALUE
+	
+	document.body.appendChild(form);
+	form.submit();
+	
+}
+
+function cMain_init(){
+		alert(jsonMenuInfo.length);
+	
+}
+
+function menuInfo(pk){
+	
 }
  		
 	//	for(i=0; i<info.length; i++){
