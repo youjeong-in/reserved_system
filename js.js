@@ -367,8 +367,8 @@ function callMenu(reCode,day){
 	//Step2
 	ajax.onreadystatechange = function(){
 		if(ajax.readyState == 4 && ajax.status == 200){
-			//Step5
-		const jsonData = JSON.parse(ajax.responseText);
+			//Step5 응답
+		const jsonData = JSON.parse(ajax.responseText);//응답받은 responseText를 json객체로 변환시켜줌
 		
 		makeHtml(jsonData,day);
 		}
@@ -497,12 +497,40 @@ function callData(){
 	
 }
 
-function cMain_init(){
-		alert(jsonMenuInfo.length);
-	
-}
 
 function menuInfo(pk){
+	//alert(jsonMenuInfo[0].primarykey);//menuInfo에서 있는 primarykey
+	//alert(pk);//server에서 보낸내용
+	let popupzone = document.getElementById("popupzone");
+	let menu = document.getElementById("menu");
+	let html;
+	if(jsonMenuInfo.length>0){
+	
+	html = "<table>";
+	html += "<tr><th>메뉴</th><th>가격</th><th>갯수</th><th>합계</th></tr>";
+	for(i=0; i<jsonMenuInfo.length; i++){
+		if(pk == jsonMenuInfo[i].primarykey){
+			//alert(jsonMenuInfo[i].menu + " : " + jsonMenuInfo[i].price + " : " + jsonMenuInfo[i].quantity + " : " + jsonMenuInfo[i].amount);
+			html += "<tr>";
+			html+= "<td>" +jsonMenuInfo[i].menu + "</td>";
+			html+= "<td>" +jsonMenuInfo[i].price + "</td>";
+			html+= "<td>" +jsonMenuInfo[i].quantity + "</td>";
+			html+= "<td>" +jsonMenuInfo[i].amount + "</td>";
+			html += "</tr>";
+		}
+		
+	}html+= "</table>";
+	 html+= "<div><span class = \"close\" onClick=\"popupClose()\"><img  src=images/delete.jpeg></span></div>";
+	//console.log(html);	
+	}
+	menu.innerHTML = html;
+	popupzone.style.display = "block";
+}
+
+function popupClose(){
+	let popupzone = document.getElementById("popupzone");
+	
+	popupzone.style.display = "none";
 	
 }
  		
